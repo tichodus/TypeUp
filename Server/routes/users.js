@@ -1,9 +1,41 @@
-var express = require("express");
+//dependencies:
+var express = require('express');
 var router = express.Router();
 
+//get models:
+const users = require('../models/users.js').users;
 
-// router.get('/', (req, res, next) => {
-//     res.render("../view/index.html");
-// });
+//routes:
 
+router.get("/getAllUsers", (req, res, next) => {
+    console.log(users);
+    users.find((err, docs) => {
+        if (err)
+            res.json(err);
+        else
+            res.json(docs);
+    });
+});
+
+router.post("/register", (req, res, next) => {
+    let user = req.body;
+    users.find({username: user.username }, (err, doc) => {
+        if (err)
+            res.send(err);
+        else {
+            if (doc.length)
+                res.json(doc);
+            else {
+                
+                users.create({ username: user.username, password: user.password, firstName: user.firstName, lastName:user.lastName }, (erro, userdoc) => {
+                    if (erro)
+                        res.send(err);
+                    res.json(userdoc);
+                });
+            }
+        }
+    });
+});
+
+//export router
 module.exports = router;
