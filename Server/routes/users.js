@@ -8,7 +8,6 @@ const users = require('../models/users.js').users;
 //routes:
 
 router.get("/getAllUsers", (req, res, next) => {
-    console.log(users);
     users.find((err, docs) => {
         if (err)
             res.json(err);
@@ -19,6 +18,7 @@ router.get("/getAllUsers", (req, res, next) => {
 
 router.post("/register", (req, res, next) => {
     let user = req.body;
+    console.log(user);
     users.find({username: user.username }, (err, doc) => {
         if (err)
             res.send(err);
