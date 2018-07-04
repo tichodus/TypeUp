@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "700810058017",
+    "firebase_url": "https://workup-1d15a.firebaseio.com",
+    "project_id": "workup-1d15a",
+    "storage_bucket": "workup-1d15a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700810058017:android:f8f75378acad687a",
+        "android_client_info": {
+          "package_name": "com.example.stefan.workup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700810058017-kdh5tt34foas8okhe70n22fcvl3tbup0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt3p1BJNSv6IFreSNZfC6RUS4wzwS5yrc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
