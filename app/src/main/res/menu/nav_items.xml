@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:checkable="false"
+        android:enabled="true"
+        android:icon="@drawable/baseline_person_black_18dp"
+        android:title="@string/nav_profile"
+        android:visible="true"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/baseline_streetview_black_18dp"
+        app:showAsAction="always"
+        android:title="@string/nav_map" />
+    <item
+        android:icon="@drawable/baseline_reorder_black_18dp"
+        app:showAsAction="always"
+        android:title="@string/nav_jobs" />
+</menu>
