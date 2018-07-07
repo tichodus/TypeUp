@@ -49,17 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
 
                     case R.id.nav_profile:
-                        mMainNav.setItemBackgroundResource(R.color.colorPrimary);
                         setFragment(profileFragment);
                         return true;
 
                     case R.id.nav_map:
-                        mMainNav.setItemBackgroundResource(R.color.colorAccent);
                         setFragment(mapFragment);
                         return true;
 
                     case R.id.nav_jobs:
-                        mMainNav.setItemBackgroundResource(R.color.colorPrimaryDark);
                         setFragment(jobsFragment);
                         return true;
 
