@@ -2,7 +2,9 @@ package com.example.stefan.workup.models;
 
 import com.google.firebase.database.Exclude;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
      String firstname;
     String lastname;
      String username;

@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.nav_jobs:
+                        jobsFragment.setUser(loggedUser);
                         setFragment(jobsFragment);
                         return true;
 
