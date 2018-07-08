@@ -19,10 +19,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.stefan.workup.models.Job;
+import com.example.stefan.workup.models.JobStatus;
+import com.example.stefan.workup.models.Jobs;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,6 +43,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     MapView mMapView;
     View mView;
     private LocationManager locationManager;
+    private Jobs jobsList;
 
 
     public MapFragment() {
@@ -110,11 +116,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             return;
         } else {
             mGoogleMap.setMyLocationEnabled(true);
+            setJobsOnMap();
         }
+
 
 
     }
 
+    public void setJobs(Jobs jobs){
+        this.jobsList = jobs;
+    }
+    
     @Override
     public void onLocationChanged(Location location) {
         Toast.makeText(getContext(), String.valueOf(location.getAltitude()), Toast.LENGTH_SHORT).show();
@@ -143,4 +155,45 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         super.onDetach();
     }
+
+    private BitmapDescriptor getMarkerColor(Job job){
+        JobStatus jobStatus = job.getStatus();
+        BitmapDescriptor result=null;
+
+        switch(jobStatus){
+            case DONE:
+                result = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+                break;
+            case PENDING:
+                result = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+                break;
+            case OPEN:
+                result = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
+                break;
+
+            default:
+                result = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN);
+                break;
+        }
+
+        return result;
+    }
+
+
+    private void setMarker(Job job){
+        String latitude = job.getUserLocation().getLatitude();
+        String longitude = job.getUserLocation().getLongitude();
+
+        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude))).title(job.getJobName()).snippet(job.getDescription()).icon(this.getMarkerColor(job)));
+    }
+
+    private void setJobsOnMap(){
+        int i = 0;
+        for(Job job : jobsList.getJobs()){
+            setMarker(job);
+        }
+    }
+
+
+
 }

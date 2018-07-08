@@ -16,6 +16,8 @@ public class Job implements Serializable{
     private JobType type;
     private double payment;
 
+    private JobStatus status;
+
     public Job() {}
 
     public Job(String id, String jobName, String description, JobType type, UserLocation userLocation, double payment){
@@ -25,6 +27,7 @@ public class Job implements Serializable{
         this.description = description;
         this.type = type;
         this.payment = payment;
+        this.status = JobStatus.OPEN;
     }
 
     public String getId() {
@@ -74,4 +77,13 @@ public class Job implements Serializable{
     public void setPayment(double payment) {
         this.payment = payment;
     }
+
+    public JobStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(JobStatus status) {
+        this.status = status;
+    }
+
 }

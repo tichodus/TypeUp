@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.stefan.workup.adapters.JobsAdapter;
 import com.example.stefan.workup.models.Job;
+import com.example.stefan.workup.models.JobStatus;
 import com.example.stefan.workup.models.JobType;
 import com.example.stefan.workup.models.Jobs;
 import com.example.stefan.workup.models.User;
@@ -59,9 +60,12 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
 //        userLocation.setLongitude("45");
 //        Job job = new Job(id,"Job1","Desc1", JobType.DOG_WALKER,userLocation,20);
 //        Job job1 = new Job(id,"Job2","Desc2", JobType.PHARMACY,userLocation,30);
+//        job1.setStatus(JobStatus.DONE);
 //        Job job2 = new Job(id,"Job3","Desc3", JobType.MARKET,userLocation,40);
 //        Job job3 = new Job(id,"Job4","Desc4", JobType.FAST_FOOD,userLocation,50);
+//        job3.setStatus(JobStatus.DONE);
 //        Job job4 = new Job(id,"Job5","Desc5", JobType.DOG_WALKER,userLocation,60);
+//        job4.setStatus(JobStatus.PENDING);
 //        dbRef.child(id).setValue(job);
 //        dbRef.child(id+1).setValue(job1);
 //        dbRef.child(id+2).setValue(job2);
@@ -118,28 +122,17 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
     @Override
     public void onStart() {
         super.onStart();
-        dbRef = FirebaseDatabase.getInstance().getReference("jobs");
-        this.jobsList = new Jobs();
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot jobSnap : dataSnapshot.getChildren()) {
-                    Job jobDTO = jobSnap.getValue(Job.class);
-                    jobsList.addJob(jobDTO);
-                }
-                ListView listView = view.findViewById(R.id.list);
-                listView.setAdapter(new JobsAdapter(getContext(),R.layout.item_job_list,jobsList.getJobs()));
-                ((JobsAdapter) listView.getAdapter()).setListener(JobsFragment.this);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        ListView listView = view.findViewById(R.id.list);
+        listView.setAdapter(new JobsAdapter(getContext(),R.layout.item_job_list,jobsList.getJobs()));
+        ((JobsAdapter) listView.getAdapter()).setListener(JobsFragment.this);
     }
 
     public void setUser(User user) {
         this.user = user;
     }
+
+    public void setJobs(Jobs jobs){
+        this.jobsList = jobs;
+    }
+
 }
