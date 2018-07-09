@@ -68,21 +68,12 @@
         android:layout_marginBottom="17dp"
         android:hint="@string/create_job" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="59dp"
+    <EditText
+        android:id="@+id/payment"
+        android:layout_width="114dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/job_title"
         android:layout_alignTop="@+id/create_job"
-        android:text="Price:" />
-
-    <EditText
-        android:id="@+id/payment"
-        android:layout_width="59dp"
-        android:layout_height="28dp"
-        android:layout_alignBottom="@+id/create_job"
-        android:layout_alignStart="@+id/job_title"
-        android:layout_marginBottom="-8dp"
         android:hint="@string/payment"
         android:inputType="" />
 

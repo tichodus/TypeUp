@@ -13,7 +13,7 @@ public class UserService {
         String lastname = preference.getString("lastname","");
         String type = preference.getString("type","");
         String id = preference.getString("id","");
-
+        int jobsDone = Integer.parseInt(preference.getString("jobsDone",""));
         UserType userType;
 
        if(type.equals(UserType.PUBLISHER.toString()))
@@ -21,6 +21,8 @@ public class UserService {
        else
            userType = UserType.PROVIDER;
 
-        return new User(id,firstname,lastname,username,"",userType);
+       User user = new User(id,firstname,lastname,username,"",userType);
+       user.setJobsDone(jobsDone);
+       return user;
     }
 }

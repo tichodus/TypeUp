@@ -126,13 +126,32 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && data!=null){
             Job result = (Job) data.getSerializableExtra("updatedJob");
-            dbRef = FirebaseDatabase.getInstance().getReference("jobs");
-            Map<String, Object> jobMap = new HashMap<>();
-            jobMap.put("status", result.getStatus());
-            dbRef.child(result.getId()).updateChildren(jobMap);
+            if(result.getStatus() != JobStatus.DONE) {
+                dbRef = FirebaseDatabase.getInstance().getReference("jobs");
+                Map<String, Object> jobMap = new HashMap<>();
+                jobMap.put("status", result.getStatus());
+                dbRef.child(result.getId()).updateChildren(jobMap);
 
-            updateJob(result);
-            updateViewList();
+                updateJob(result);
+                updateViewList();
+            }
+            else if(result.getStatus() == JobStatus.DONE){
+                dbRef = FirebaseDatabase.getInstance().getReference("jobs");
+                Map<String, Object> jobMap = new HashMap<>();
+                jobMap.put("status", result.getStatus());
+                dbRef.child(result.getId()).updateChildren(jobMap);
+
+                User user = (User) getArguments().getSerializable("234");
+                if (user != null) {
+                    dbRef = FirebaseDatabase.getInstance().getReference("users");
+                    Map<String, Object> userMap = new HashMap<>();
+                    user.setJobsDone(user.getJobsDone()+1);
+                    userMap.put("jobsDone", user.getJobsDone());
+                    dbRef.child(user.getId()).updateChildren(userMap);
+                    updateJob(result);
+                    updateViewList();
+                }
+            }
         }
     }
 

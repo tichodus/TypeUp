@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("firstname",user.getFirstname());
                                 editor.putString("lastname",user.getLastname());
                                 editor.putString("type", user.getType().toString());
+                                editor.putString("jobsDone", String.valueOf(user.getJobsDone()));
                                 editor.apply();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);

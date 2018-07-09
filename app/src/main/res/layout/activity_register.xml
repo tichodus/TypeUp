@@ -9,7 +9,7 @@
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
-        android:layout_height="37dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="151dp"
@@ -23,7 +23,7 @@
     <EditText
         android:id="@+id/etLastname"
         android:layout_width="376dp"
-        android:layout_height="33dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="99dp"
@@ -39,7 +39,7 @@
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
-        android:layout_height="33dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="209dp"
@@ -55,7 +55,7 @@
     <EditText
         android:id="@+id/etFirstname"
         android:layout_width="match_parent"
-        android:layout_height="33dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="47dp"
@@ -84,16 +84,8 @@
         android:layout_width="343dp"
         android:layout_height="82dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="184dp"
-        android:layout_marginStart="22dp">
-
-        <RadioButton
-            android:id="@+id/rbPublisher"
-            android:layout_width="194dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:text="Publisher" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="167dp">
 
         <RadioButton
             android:id="@+id/rbProvider"
@@ -101,6 +93,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Provider" />
+
+        <RadioButton
+            android:id="@+id/rbPublisher"
+            android:layout_width="194dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:text="Publisher" />
 
     </RadioGroup>
 

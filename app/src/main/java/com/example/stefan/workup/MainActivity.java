@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private JobsFragment jobsFragment;
     private CreateJobFragment createJobFragment;
-
+    Bundle bundle;
 
     private DatabaseReference dbRef;
     private Jobs jobsList;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         createJobFragment = new CreateJobFragment();
 
 
-        Bundle bundle = new Bundle();
+        bundle = new Bundle();
         bundle.putSerializable("234", loggedUser);
         profileFragment.setArguments(bundle);
         setFragment(profileFragment);
@@ -94,10 +94,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setJobsFragment() {
+        jobsFragment.setArguments(bundle);
         switch(loggedUser.getType()){
             case PROVIDER:
                 jobsFragment.setJobs(jobsList);
-                jobsFragment.setUser(loggedUser);
                 setFragment(jobsFragment);
                 break;
             case PUBLISHER:
