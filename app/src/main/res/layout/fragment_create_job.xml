@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateJobActivity">
+
+    <EditText
+        android:id="@+id/job_title"
+        android:layout_width="292dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:hint="@string/job_title"
+        android:inputType="" />
+
+    <EditText
+        android:id="@+id/desc"
+        android:layout_width="292dp"
+        android:layout_height="196dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="87dp"
+        android:hint="@string/description"
+        android:inputType="" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="291dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="79dp">
+
+        <RadioButton
+            android:id="@+id/pharmacy"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:hint="@string/pharmacy" />
+
+        <RadioButton
+            android:id="@+id/market"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/market" />
+
+        <RadioButton
+            android:id="@+id/dog_walker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/dog_walker" />
+
+        <RadioButton
+            android:id="@+id/fast_food"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:hint="@string/fast_food" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/create_job"
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/job_title"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="17dp"
+        android:hint="@string/create_job" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="59dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/job_title"
+        android:layout_alignTop="@+id/create_job"
+        android:text="Price:" />
+
+    <EditText
+        android:id="@+id/payment"
+        android:layout_width="59dp"
+        android:layout_height="28dp"
+        android:layout_alignBottom="@+id/create_job"
+        android:layout_alignStart="@+id/job_title"
+        android:layout_marginBottom="-8dp"
+        android:hint="@string/payment"
+        android:inputType="" />
+
+</RelativeLayout>

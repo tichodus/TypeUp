@@ -6,11 +6,12 @@ import java.io.Serializable;
 
 public class User implements Serializable{
      String firstname;
-    String lastname;
+     String lastname;
      String username;
      String password;
      UserType type;
      String id;
+     int jobsDone;
 
      public User(){}
 
@@ -21,6 +22,7 @@ public class User implements Serializable{
         this.username = username;
         this.password = password;
         this.type = type;
+        jobsDone = 0;
     }
 
     public String getId() {
@@ -71,4 +73,15 @@ public class User implements Serializable{
     public void setId(String id) {
         this.id = id;
     }
+
+    public int getJobsDone() {
+        return jobsDone;
+    }
+
+    public void setJobsDone(int jobsDone) {
+        this.jobsDone = jobsDone;
+    }
+
+
+
 }

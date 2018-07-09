@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -43,8 +49,10 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
     Jobs jobsList;
     User user;
     private DatabaseReference dbRef;
+    private List<Job> currentJobs;
 
     public JobsFragment() {
+        this.currentJobs = new ArrayList<>();
     }
 
     private View view;
@@ -90,8 +98,12 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getContext(), adapterView.getItemIdAtPosition(i) + "Selected", Toast.LENGTH_LONG).show();
-                int data = Filter.values()[i].data;
+                String criteria = (String) adapterView.getItemAtPosition(i);
+                currentJobs = filterJobs(getJobTypeByCriteria(criteria));
+                updateViewList();
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).reinitalizeMapFragment(currentJobs);
+                }
             }
 
             @Override
@@ -100,18 +112,32 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
             }
         });
 
-
     }
 
     @Override
     public void onItemSelected(Job job) {
-        Intent intent = new Intent(getContext(),JobDetails.class);
+        Intent intent = new Intent(getContext(), JobDetails.class);
         intent.putExtra("job", (Serializable) job);
-        startActivity(intent);
+        startActivityForResult(intent,1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && data!=null){
+            Job result = (Job) data.getSerializableExtra("updatedJob");
+            dbRef = FirebaseDatabase.getInstance().getReference("jobs");
+            Map<String, Object> jobMap = new HashMap<>();
+            jobMap.put("status", result.getStatus());
+            dbRef.child(result.getId()).updateChildren(jobMap);
+
+            updateJob(result);
+            updateViewList();
+        }
     }
 
     enum Filter {
-        ALL(1),Pharamcy(2);
+        ALL(1), Pharamcy(2);
         int data;
 
         private Filter(int value) {
@@ -119,11 +145,22 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
         }
     }
 
+    void updateJob(Job job){
+        for (Job currentJob : currentJobs) {
+            if(currentJob.getId().equalsIgnoreCase(job.getId()))
+                currentJob.setStatus(job.getStatus());
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
+
+    }
+
+    private void updateViewList() {
         ListView listView = view.findViewById(R.id.list);
-        listView.setAdapter(new JobsAdapter(getContext(),R.layout.item_job_list,jobsList.getJobs()));
+        listView.setAdapter(new JobsAdapter(getContext(), R.layout.item_job_list, currentJobs));
         ((JobsAdapter) listView.getAdapter()).setListener(JobsFragment.this);
     }
 
@@ -131,8 +168,47 @@ public class JobsFragment extends Fragment implements JobsAdapter.Listener {
         this.user = user;
     }
 
-    public void setJobs(Jobs jobs){
+    public void setJobs(Jobs jobs) {
         this.jobsList = jobs;
     }
+
+    private List<Job> filterJobs(JobType criteria) {
+        List<Job> jobs = new ArrayList<>();
+        if (criteria != null) {
+            for (Job job : jobsList.getJobs()) {
+                if (job.getType().toString().equalsIgnoreCase(criteria.toString()))
+                    jobs.add(job.cloneObject());
+            }
+        } else
+            jobs = new Jobs(jobsList.getJobs()).cloneObject().getJobs();
+        return jobs;
+    }
+
+    private JobType getJobTypeByCriteria(String criteria) {
+        JobType type;
+        switch (criteria) {
+            case "Pharmacy":
+                type = JobType.PHARMACY;
+                break;
+
+            case "Fast Food":
+                type = JobType.FAST_FOOD;
+                break;
+
+            case "Market":
+                type = JobType.MARKET;
+                break;
+
+            case "Dog walker":
+                type = JobType.DOG_WALKER;
+                break;
+
+            default:
+                type = null;
+                break;
+        }
+        return type;
+    }
+
 
 }

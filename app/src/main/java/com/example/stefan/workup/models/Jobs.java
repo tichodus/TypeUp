@@ -1,9 +1,12 @@
 package com.example.stefan.workup.models;
 
+import android.widget.ArrayAdapter;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Jobs {
+public class Jobs implements Serializable, Cloneable{
     List<Job> jobs = null;
 
     public Jobs(){
@@ -12,6 +15,14 @@ public class Jobs {
 
     public List<Job> getJobs(){
         return jobs;
+    }
+
+    public Jobs(List<Job> jobs){
+        this.jobs = jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
     }
 
     public void addJob(Job job){
@@ -48,5 +59,24 @@ public class Jobs {
         }
 
         return result;
+    }
+
+    public Jobs cloneObject(){
+        Jobs jobs = new Jobs();
+        jobs.setJobs(this.jobs);
+        return jobs;
+    }
+
+    public void updateJob(Job update){
+        if(jobExists(update)){
+            Job job = getJobById(update.getId());
+            job.setStatus(update.getStatus());
+            job.setDescription(update.getDescription());
+            job.setId(update.getId());
+            job.setJobName(update.getJobName());
+            job.setUserLocation(update.getUserLocation());
+            job.setPayment(update.getPayment());
+            job.setType(update.getType());
+        }
     }
 }

@@ -4,6 +4,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <TextView
+        android:id="@+id/tvJobPayment2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView"
+        android:layout_alignTop="@+id/tvJobPayment"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/tvJobTitleLabel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="Job Title:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/bApply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="84dp"
+
+        android:text="Apply" />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,15 +45,18 @@
             android:id="@+id/tvJobTitle"
             android:layout_width="300dp"
             android:layout_height="43dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
             android:text="Job" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="300dp"
-        android:layout_height="178dp"
+        android:layout_height="118dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="213dp">
+        android:layout_marginTop="141dp">
 
         <TextView
             android:id="@+id/tvJobDescription"
@@ -37,18 +70,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="85dp"
+        android:layout_marginBottom="147dp"
+        android:layout_toEndOf="@+id/textView"
         android:text="TextView" />
 
     <Button
-        android:id="@+id/bApply"
+        android:id="@+id/bVerify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvJobPayment"
-        android:layout_marginTop="-76dp"
-        android:text="Button" />
+        android:layout_marginBottom="11dp"
+        android:text="Verify" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="195dp"
+        android:layout_marginStart="23dp"
+        android:text="Job Status:" />
+
+    <TextView
+        android:id="@+id/tvJobStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/textView"
+        android:layout_marginStart="109dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/textView"
+        android:layout_marginEnd="93dp"
+        android:text="Job Type:" />
+
+    <TextView
+        android:id="@+id/tvJobType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/textView"
+        android:layout_marginEnd="22dp"
+        android:text="TextView" />
 
 
 </RelativeLayout>

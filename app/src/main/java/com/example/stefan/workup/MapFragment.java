@@ -4,6 +4,7 @@ package com.example.stefan.workup;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -30,13 +31,23 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener,GoogleMap.OnMarkerClickListener {
 
     private static final int REQUEST_CODE_GPS = 453;
     GoogleMap mGoogleMap;
@@ -44,10 +55,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     View mView;
     private LocationManager locationManager;
     private Jobs jobsList;
-
-
+    DatabaseReference dbRef;
+    Map<String, Job> jobMap;
     public MapFragment() {
         // Required empty public constructor
+        jobMap = new HashMap<>();
     }
 
 
@@ -56,6 +68,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
+        dbRef = FirebaseDatabase.getInstance().getReference("jobs");
         return mView;
     }
 
@@ -69,7 +82,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             mMapView.onResume();
             mMapView.getMapAsync(this);
         }
-        initLocation();
+
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                jobsList = new Jobs();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Job job = snapshot.getValue(Job.class);
+                    jobsList.addJob(job);
+                }
+                if (mGoogleMap!=null) {
+                    mGoogleMap.clear();
+                    setJobsOnMap();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void initLocation() {
@@ -78,10 +112,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_GPS);
             } else {
+                setJobsOnMap();
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 5, MapFragment.this, Looper.getMainLooper());
             }
         }
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //    Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
     }
 
@@ -94,8 +129,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initLocation();
             } else {
-                // permission denied, boo! Disable the
-                // functionality that depends on this permission.
+                Toast.makeText(getContext(), "Perssmison has to be granted!", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -110,7 +144,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        initLocation();
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 5);
             return;
@@ -120,13 +155,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }
 
 
-
     }
 
-    public void setJobs(Jobs jobs){
+    public void setJobs(Jobs jobs) {
         this.jobsList = jobs;
     }
-    
+
     @Override
     public void onLocationChanged(Location location) {
         Toast.makeText(getContext(), String.valueOf(location.getAltitude()), Toast.LENGTH_SHORT).show();
@@ -156,11 +190,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         super.onDetach();
     }
 
-    private BitmapDescriptor getMarkerColor(Job job){
+    private BitmapDescriptor getMarkerColor(Job job) {
         JobStatus jobStatus = job.getStatus();
-        BitmapDescriptor result=null;
+        BitmapDescriptor result = null;
 
-        switch(jobStatus){
+        switch (jobStatus) {
             case DONE:
                 result = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
                 break;
@@ -180,20 +214,62 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     }
 
 
-    private void setMarker(Job job){
+    private void setMarker(Job job, int i) {
         String latitude = job.getUserLocation().getLatitude();
         String longitude = job.getUserLocation().getLongitude();
 
-        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude))).title(job.getJobName()).snippet(job.getDescription()).icon(this.getMarkerColor(job)));
-    }
-
-    private void setJobsOnMap(){
-        int i = 0;
-        for(Job job : jobsList.getJobs()){
-            setMarker(job);
+        if (latitude != null && longitude != null) {
+            Marker marker =   mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(latitude) + i, Double.parseDouble(longitude) + i)).title(job.getJobName()).snippet(job.getDescription()).icon(this.getMarkerColor(job)));
+            mGoogleMap.setOnMarkerClickListener(this);
+            jobMap.put(marker.getId(),job);
         }
     }
 
 
 
+    public void setJobsOnMap() {
+        if (getArguments() != null) {
+            jobsList = (Jobs) getArguments().getSerializable("23");
+        }
+        if (mGoogleMap == null) {
+            return;
+        }
+        mGoogleMap.clear();
+        int i = 0;
+        for (Job job : jobsList.getJobs()) {
+            setMarker(job, i++);
+        }
+    }
+
+
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+       if(jobMap.get(marker.getId()) != null){
+           Job job = jobMap.get(marker.getId());
+           Intent intent = new Intent(getContext(), JobDetails.class);
+           intent.putExtra("job", (Serializable) job);
+           startActivityForResult(intent,2);
+           return true;
+       }
+       return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 2 && data!=null){
+            Job job = (Job) data.getSerializableExtra("updatedJob");
+            for (Job job1 : jobsList.getJobs()) {
+                if(job1.getId().equalsIgnoreCase(job.getId()))
+                    job1.setStatus(job.getStatus());
+            }
+            Map<String, Object> jobHashMap = new HashMap<>();
+            jobHashMap.put("status", job.getStatus());
+            dbRef.child(job.getId()).updateChildren(jobHashMap);
+        }
+
+    }
 }
